@@ -15,12 +15,19 @@ pub fn app() -> Html {
         })
     };
 
+    let reset_state = {
+        let value_state = value_state.clone();
+        Callback::from(move |value: String| {
+            value_state.set(value);
+        })
+    };
+
     let buttons_grid = [
         "1", "2", "3", "/",
         "4", "5", "6", "*",
         "7", "8", "9", "-",
         "0", ".", "=", "+",
-    ].map(|btn| html! { <Button value={btn} on_click={add_to_state.clone()} /> })
+    ].map(|btn| html! { <Button value={btn} text={btn} on_click={add_to_state.clone()} /> })
      .chunks(4)
      .map(|slice| slice.to_vec())
      .map(|row| html! { <tr> { for row } </tr> })
@@ -32,7 +39,7 @@ pub fn app() -> Html {
             <td colspan="3"> 
                 <input type="text" id="result" value={ (*value_state).clone() }/> 
             </td> 
-            <td><input class="reset" type="button" value="c"/></td> 
+            <Button value="" text="c" on_click={reset_state} class={ "reset" } />
         </tr> 
   
         { buttons_grid }
