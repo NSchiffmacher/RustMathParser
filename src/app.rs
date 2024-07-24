@@ -22,19 +22,32 @@ pub fn app() -> Html {
         })
     };
 
+    let compute_result = {
+        let value_state = value_state.clone();
+        Callback::from(move |_| {
+            let str_value = (*value_state).clone();
+            log!(str_value);
+            value_state.set("".to_string());
+        })
+    };
+
     let buttons_grid = [
         "1", "2", "3", "/",
         "4", "5", "6", "*",
         "7", "8", "9", "-",
         "0", ".", "=", "+",
-    ].map(|btn| html! { <Button value={btn} text={btn} on_click={add_to_state.clone()} /> })
+    ].map(|btn| if btn == "=" {
+        html! { <Button value={btn} text={btn} on_click={compute_result.clone()} /> }
+    } else {
+        html! { <Button value={btn} text={btn} on_click={add_to_state.clone()} /> }
+    })
      .chunks(4)
      .map(|slice| slice.to_vec())
      .map(|row| html! { <tr> { for row } </tr> })
      .collect::<Vec<_>>();
 
     html! {
-    <table id="calcu"> 
+    <table id="calculator"> 
         <tr> 
             <td colspan="3"> 
                 <input type="text" id="result" value={ (*value_state).clone() }/> 

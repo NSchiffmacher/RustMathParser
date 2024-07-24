@@ -1,5 +1,6 @@
 mod app;
 mod button;
+mod parser;
 
 use app::App;
 
