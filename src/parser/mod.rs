@@ -13,7 +13,7 @@ mod tests {
         let res: expr::T = 3+4;
         let expr = Expr::parse(input).unwrap();
 
-        assert_eq!(expr.eval(), res);
+        assert_eq!(expr.eval().unwrap(), res);
     }
 
     #[test]
@@ -22,7 +22,7 @@ mod tests {
         let res: expr::T = 3*4;
         let expr = Expr::parse(input).unwrap();
 
-        assert_eq!(expr.eval(), res);
+        assert_eq!(expr.eval().unwrap(), res);
     }
 
     #[test]
@@ -31,7 +31,7 @@ mod tests {
         let res: expr::T = 3+4*5;
         let expr = Expr::parse(input).unwrap();
 
-        assert_eq!(expr.eval(), res);
+        assert_eq!(expr.eval().unwrap(), res);
     }
 
     #[test]
@@ -40,7 +40,7 @@ mod tests {
         let res: expr::T = 3*4+5;
         let expr = Expr::parse(input).unwrap();
 
-        assert_eq!(expr.eval(), res);
+        assert_eq!(expr.eval().unwrap(), res);
     }
 
     #[test]
@@ -49,7 +49,7 @@ mod tests {
         let res: expr::T = (3+4)*5;
         let expr = Expr::parse(input).unwrap();
 
-        assert_eq!(expr.eval(), res);
+        assert_eq!(expr.eval().unwrap(), res);
     }
 
     #[test]
@@ -58,6 +58,47 @@ mod tests {
         let res: expr::T = 3*(4+5);
         let expr = Expr::parse(input).unwrap();
 
-        assert_eq!(expr.eval(), res);
+        assert_eq!(expr.eval().unwrap(), res);
     }
+
+    #[test]
+    fn crash_missmatch() {
+        let input = "3*(4+(5+)";
+        assert!(Expr::parse(input).is_err());
+    }
+
+    #[test]
+    fn complex1() {
+        let input = "1 -1   + 2   - 2   +  4 - 4 +    6";
+        let res: expr::T = 6;
+        let expr = Expr::parse(input).unwrap();
+
+        assert_eq!(expr.eval().unwrap(), res);
+    }
+
+    #[test]
+    fn complex2() {
+        let input = "2*3*4/8 -   5/2*4 +  6 + 0/3 ";
+        let res: expr::T = 2*3*4/8 -   5/2*4 +  6 + 0/3;
+        let expr = Expr::parse(input).unwrap();
+
+        assert_eq!(expr.eval().unwrap(), res);
+    }
+
+    #[test]
+    fn complex3() {
+        let input: &str = "(2) + (17*2-30) * (5)+2 - (8/2)*4";
+        let res: expr::T = 8;
+        let expr = Expr::parse(input).unwrap();
+
+        assert_eq!(expr.eval().unwrap(), res);
+    }
+
+    #[test]
+    fn div_zero() {
+        let input = "1/0";
+        let expr = Expr::parse(input).unwrap();
+        assert!(expr.eval().is_err());
+    }
+
 }

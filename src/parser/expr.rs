@@ -10,7 +10,7 @@ pub const OPERATORS_PRECEDENCE: LazyCell<HashMap<String, usize>> = LazyCell::new
     map.insert("+".to_string(), 0);
     map.insert("-".to_string(), 0);
     map.insert("*".to_string(), 1);
-    // map.insert('/', 1);
+    map.insert("/".to_string(), 1);
     // map.insert('^', 2);
     return map;
 });
@@ -19,6 +19,7 @@ pub enum Expr {
     Litteral(T),
     Add(Box<Expr>, Box<Expr>),
     Prod(Box<Expr>, Box<Expr>),
+    Div(Box<Expr>, Box<Expr>),
     Sub(Box<Expr>, Box<Expr>),
 }
 
@@ -29,25 +30,36 @@ impl Debug for Expr {
             Expr::Litteral(val) => write!(f, "{}", val),
             Expr::Add(left, right) => write!(f, "Add({:?}, {:?})", left, right),
             Expr::Prod(left, right) => write!(f, "Prod({:?}, {:?})", left, right),
+            Expr::Div(left, right) => write!(f, "Div({:?}, {:?})", left, right),
             Expr::Sub(left, right) => write!(f, "Sub({:?}, {:?})", left, right),
         }
     }
 }
 
 impl Expr {
-    pub fn eval(&self) -> T {
+    pub fn eval(&self) -> Result<T, String> {
         match self {
-            Expr::Litteral(val) => *val,
-            Expr::Add(left, right) => left.eval() + right.eval(),
-            Expr::Prod(left, right) => left.eval() * right.eval(),
-            Expr::Sub(left, right) => left.eval() - right.eval(),
+            Expr::Litteral(val) => Ok(*val),
+            Expr::Add(left, right) => Ok(left.eval()? + right.eval()?),
+            Expr::Prod(left, right) => Ok(left.eval()? * right.eval()?),
+            Expr::Sub(left, right) => Ok(left.eval()? - right.eval()?),
+            Expr::Div(left, right) => {
+                let left = left.eval()?;
+                let right = right.eval()?;
+
+                if right == T::from(0) {
+                    return Err(format!("Cannot divide {} by zero", left));
+                }
+
+                Ok(left / right)
+            },
         }
     }
 
     fn build_next_expr(operator: &str, expressions_queue: &mut VecDeque<Expr>) -> Result<(), String> {
         // For now we only have operators with two arguments
         if expressions_queue.len() < 2 {
-            return Err("Fail in foo (1)".to_string());
+            return Err("Missmatched operator".to_string());
         }
 
         let right = Box::new(expressions_queue.pop_back().unwrap());
@@ -57,6 +69,7 @@ impl Expr {
             "+" => Expr::Add(left, right),
             "-" => Expr::Sub(left, right),
             "*" => Expr::Prod(left, right),
+            "/" => Expr::Div(left, right),
             _ => unreachable!(),
         };
 
