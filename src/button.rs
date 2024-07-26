@@ -1,6 +1,5 @@
 use yew::prelude::*;
 
-
 #[derive(Properties, PartialEq)]
 pub struct ButtonProps {
     pub value: String,
@@ -12,7 +11,14 @@ pub struct ButtonProps {
 }
 
 #[function_component(Button)]
-pub fn button(ButtonProps { value, text, on_click, class }: &ButtonProps) -> Html {
+pub fn button(
+    ButtonProps {
+        value,
+        text,
+        on_click,
+        class,
+    }: &ButtonProps,
+) -> Html {
     let callback = {
         let on_click = on_click.clone();
         let value = value.clone();
@@ -20,7 +26,6 @@ pub fn button(ButtonProps { value, text, on_click, class }: &ButtonProps) -> Htm
             on_click.emit(value.clone());
         })
     };
-    
 
     html! {
         <td>
