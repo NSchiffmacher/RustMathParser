@@ -3,6 +3,12 @@ mod tokenizer;
 
 pub use expr::Expr;
 
+pub fn parse(input: &str) -> Result<expr::T, String> {
+    let expr = Expr::parse(input)?;
+    let result = expr.eval()?;
+    Ok(result)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -117,5 +123,22 @@ mod tests {
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
+    }
+
+    #[test]
+    fn pow_parentheses() {
+        let input = "2^(3+4)";
+        let res: expr::T = 128;
+        let expr = Expr::parse(input).unwrap();
+
+        assert_eq!(expr.eval().unwrap(), res);
+    }
+
+    #[test]
+    fn helper_parse() {
+        let input = "(2) + (17*2-30) * (5)+2 - (8/2)*4";
+        let result: expr::T = 8;
+        
+        assert_eq!(parse(input).unwrap(), result);
     }
 }
