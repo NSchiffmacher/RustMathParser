@@ -3,7 +3,6 @@ use yew::prelude::*;
 use crate::button::Button;
 use crate::parser::parse;
 
-
 #[function_component(App)]
 pub fn app() -> Html {
     let value_state = use_state(|| "".to_string());
@@ -37,17 +36,15 @@ pub fn app() -> Html {
     let clear_entry = {
         let value_state = value_state.clone();
         let allow_input = allow_input.clone();
-        Callback::from(move |_: String| {
-            match *allow_input {
-                true => {
-                    let mut v = (*value_state).clone();
-                    v.pop();
-                    value_state.set(v);
-                },
-                false => {
-                    value_state.set("".to_string());
-                    allow_input.set(true);
-                },
+        Callback::from(move |_: String| match *allow_input {
+            true => {
+                let mut v = (*value_state).clone();
+                v.pop();
+                value_state.set(v);
+            }
+            false => {
+                value_state.set("".to_string());
+                allow_input.set(true);
             }
         })
     };
@@ -59,7 +56,7 @@ pub fn app() -> Html {
             if !*allow_input {
                 return;
             }
-            
+
             let str_value = (*value_state).clone();
             let result = parse(&str_value);
 
@@ -67,8 +64,8 @@ pub fn app() -> Html {
                 Ok(expr) => format!("{:?}", expr),
                 Err(err) => {
                     allow_input.set(false);
-                    format!("Error: {}", err) 
-                },
+                    format!("Error: {}", err)
+                }
             };
 
             value_state.set(str_result);

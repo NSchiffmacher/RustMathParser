@@ -1,11 +1,11 @@
 use super::tokenizer::tokenize;
-use std::cell::LazyCell;
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::fmt::Debug;
+use std::sync::LazyLock;
 
 pub type T = i32;
 
-pub const OPERATORS_PRECEDENCE: LazyCell<HashMap<String, usize>> = LazyCell::new(|| {
+pub static OPERATORS_PRECEDENCE: LazyLock<HashMap<String, usize>> = LazyLock::new(|| {
     let mut map = HashMap::new();
     map.insert("+".to_string(), 0);
     map.insert("-".to_string(), 0);
@@ -13,12 +13,12 @@ pub const OPERATORS_PRECEDENCE: LazyCell<HashMap<String, usize>> = LazyCell::new
     map.insert("/".to_string(), 1);
     map.insert("%".to_string(), 1);
     map.insert("^".to_string(), 2);
-    return map;
+    map
 });
-pub const RIGHT_ASSOCIATIVE_OPERATORS: LazyCell<HashSet<String>> = LazyCell::new(|| {
+pub static RIGHT_ASSOCIATIVE_OPERATORS: LazyLock<HashSet<String>> = LazyLock::new(|| {
     let mut set = HashSet::new();
     set.insert("^".to_string());
-    return set;
+    set
 });
 
 pub enum Expr {
@@ -62,7 +62,7 @@ impl Expr {
                 }
 
                 Ok(left / right)
-            },
+            }
             Expr::Pow(left, right) => {
                 let left = left.eval()?;
                 let right = right.eval()?;
@@ -76,7 +76,7 @@ impl Expr {
                 }
 
                 Ok(left.pow(right as u32))
-            },
+            }
             Expr::Mod(left, right) => {
                 let left = left.eval()?;
                 let right = right.eval()?;
@@ -85,7 +85,7 @@ impl Expr {
                     return Err(format!("Cannot divide {} by zero", left));
                 }
 
-                Ok(left % right)                
+                Ok(left % right)
             }
         }
     }
