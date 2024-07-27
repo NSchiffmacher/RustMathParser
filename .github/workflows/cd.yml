@@ -22,7 +22,7 @@ jobs:
 
       - uses: actions/checkout@v4
 
-      - run: trunk build --release --public-url /YewSampleApp/
+      - run: trunk build --release --public-url /RustMathParser/
 
       - uses: peaceiris/actions-gh-pages@v4
         if: github.ref == 'refs/heads/main'
