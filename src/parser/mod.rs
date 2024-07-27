@@ -138,7 +138,7 @@ mod tests {
     fn helper_parse() {
         let input = "(2) + (17*2-30) * (5)+2 - (8/2)*4";
         let result: expr::T = 8;
-        
+
         assert_eq!(parse(input).unwrap(), result);
     }
 }
