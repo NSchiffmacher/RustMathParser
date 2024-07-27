@@ -11,6 +11,7 @@ pub const OPERATORS_PRECEDENCE: LazyCell<HashMap<String, usize>> = LazyCell::new
     map.insert("-".to_string(), 0);
     map.insert("*".to_string(), 1);
     map.insert("/".to_string(), 1);
+    map.insert("%".to_string(), 1);
     map.insert("^".to_string(), 2);
     return map;
 });
@@ -27,6 +28,7 @@ pub enum Expr {
     Div(Box<Expr>, Box<Expr>),
     Sub(Box<Expr>, Box<Expr>),
     Pow(Box<Expr>, Box<Expr>),
+    Mod(Box<Expr>, Box<Expr>),
 }
 
 impl Debug for Expr {
@@ -39,6 +41,7 @@ impl Debug for Expr {
             Expr::Div(left, right) => write!(f, "Div({:?}, {:?})", left, right),
             Expr::Sub(left, right) => write!(f, "Sub({:?}, {:?})", left, right),
             Expr::Pow(left, right) => write!(f, "Pow({:?}, {:?})", left, right),
+            Expr::Mod(left, right) => write!(f, "Mod({:?}, {:?})", left, right),
         }
     }
 }
@@ -59,7 +62,7 @@ impl Expr {
                 }
 
                 Ok(left / right)
-            }
+            },
             Expr::Pow(left, right) => {
                 let left = left.eval()?;
                 let right = right.eval()?;
@@ -73,6 +76,16 @@ impl Expr {
                 }
 
                 Ok(left.pow(right as u32))
+            },
+            Expr::Mod(left, right) => {
+                let left = left.eval()?;
+                let right = right.eval()?;
+
+                if right == T::from(0) {
+                    return Err(format!("Cannot divide {} by zero", left));
+                }
+
+                Ok(left % right)                
             }
         }
     }
@@ -94,6 +107,7 @@ impl Expr {
             "-" => Expr::Sub(left, right),
             "*" => Expr::Prod(left, right),
             "/" => Expr::Div(left, right),
+            "%" => Expr::Mod(left, right),
             "^" => Expr::Pow(left, right),
             _ => unreachable!(),
         };

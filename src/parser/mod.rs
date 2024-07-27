@@ -135,6 +135,15 @@ mod tests {
     }
 
     #[test]
+    fn basic_mod() {
+        let input = "7 % 3";
+        let result = 1;
+        let expr = Expr::parse(input).unwrap();
+
+        assert_eq!(expr.eval().unwrap(), result);
+    }
+
+    #[test]
     fn helper_parse() {
         let input = "(2) + (17*2-30) * (5)+2 - (8/2)*4";
         let result: expr::T = 8;
