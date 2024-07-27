@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Calculator</title>
+    <link rel="stylesheet" href="/YewSampleApp/index-250af2fa0bafe354.css" integrity="sha384&#x2D;qnMOLwVVei9Jsom1HT5E0LxfyGGioBGm5M4UrA8WaJDjIKbg5SrtUVLsapFCKZ3i"/>
+  
+<link rel="modulepreload" href="/YewSampleApp/trunk-template-7d1b45811fc52815.js" crossorigin=anonymous integrity="sha384-wMEg5C/mn1nvmQrld45dzUsBji4yi/voGXIVuHzzi892nRxhyg0yYxpva4H/3YeH">
+<link rel="preload" href="/YewSampleApp/trunk-template-7d1b45811fc52815_bg.wasm" crossorigin=anonymous integrity="sha384-dtcZblo/Gs5U9SD065pphlMF4FTnC8WLmTo/7iQoqO237+hP1WHmMeSTBFkYcq0F" as="fetch" type="application/wasm"></head>
+  <body>
+<script type="module" nonce="tnHa3ctLQ7j6L72ltBIoOQ==">
+import init, * as bindings from '/YewSampleApp/trunk-template-7d1b45811fc52815.js';
+const wasm = await init('/YewSampleApp/trunk-template-7d1b45811fc52815_bg.wasm');
+
+
+window.wasmBindings = bindings;
+
+
+dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
+
+</script></body>
+</html>
