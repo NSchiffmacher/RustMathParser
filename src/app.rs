@@ -38,19 +38,23 @@ pub fn app() -> Html {
         })
     };
 
-    let buttons_grid = [
-        "1", "2", "3", "/", "4", "5", "6", "*", "7", "8", "9", "-", "0", ".", "=", "+",
+    let buttons_grid = vec![
+        vec!["1", "2", "3", "/"], 
+        vec!["4", "5", "6", "*"], 
+        vec!["7", "8", "9", "-"], 
+        vec!["0", ".", "=", "+"],
     ]
-    .map(|btn| {
-        if btn == "=" {
-            html! { <Button value={btn} text={btn} on_click={compute_result.clone()} /> }
-        } else {
-            html! { <Button value={btn} text={btn} on_click={add_to_state.clone()} /> }
-        }
+    .into_iter()
+    .map(|row| {
+        let btns_html: Vec<_> = row.iter().map(|btn| {
+            if *btn == "=" {
+                html! { <Button value={*btn} text={*btn} on_click={compute_result.clone()} /> }
+            } else {
+                html! { <Button value={*btn} text={*btn} on_click={add_to_state.clone()} /> }
+            }
+        }).collect();
+        html! { <tr> { for btns_html } </tr> }
     })
-    .chunks(4)
-    .map(|slice| slice.to_vec())
-    .map(|row| html! { <tr> { for row } </tr> })
     .collect::<Vec<_>>();
 
     html! {
