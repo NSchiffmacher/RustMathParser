@@ -14,7 +14,9 @@ pub fn tokenize(input: &str) -> Result<Vec<String>, String> {
                 tokens.push(token.into_iter().collect());
             }
             '(' | ')' => tokens.push(c.to_string()),
-            c if OPERATORS_PRECEDENCE.contains_key(c.to_string().as_str()) => tokens.push(c.to_string()),
+            c if OPERATORS_PRECEDENCE.contains_key(c.to_string().as_str()) => {
+                tokens.push(c.to_string())
+            }
             ' ' => {}
             _ => return Err(format!("Unrecognized token {c}")),
         };

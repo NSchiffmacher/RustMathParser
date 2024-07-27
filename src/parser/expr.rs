@@ -1,7 +1,7 @@
 use super::tokenizer::tokenize;
-use std::fmt::Debug;
 use std::cell::LazyCell;
-use std::collections::{HashMap, VecDeque};
+use std::collections::{HashMap, HashSet, VecDeque};
+use std::fmt::Debug;
 
 pub type T = i32;
 
@@ -11,8 +11,13 @@ pub const OPERATORS_PRECEDENCE: LazyCell<HashMap<String, usize>> = LazyCell::new
     map.insert("-".to_string(), 0);
     map.insert("*".to_string(), 1);
     map.insert("/".to_string(), 1);
-    // map.insert('^', 2);
+    map.insert("^".to_string(), 2);
     return map;
+});
+pub const RIGHT_ASSOCIATIVE_OPERATORS: LazyCell<HashSet<String>> = LazyCell::new(|| {
+    let mut set = HashSet::new();
+    set.insert("^".to_string());
+    return set;
 });
 
 pub enum Expr {
@@ -21,6 +26,7 @@ pub enum Expr {
     Prod(Box<Expr>, Box<Expr>),
     Div(Box<Expr>, Box<Expr>),
     Sub(Box<Expr>, Box<Expr>),
+    Pow(Box<Expr>, Box<Expr>),
 }
 
 impl Debug for Expr {
@@ -32,6 +38,7 @@ impl Debug for Expr {
             Expr::Prod(left, right) => write!(f, "Prod({:?}, {:?})", left, right),
             Expr::Div(left, right) => write!(f, "Div({:?}, {:?})", left, right),
             Expr::Sub(left, right) => write!(f, "Sub({:?}, {:?})", left, right),
+            Expr::Pow(left, right) => write!(f, "Pow({:?}, {:?})", left, right),
         }
     }
 }
@@ -52,11 +59,28 @@ impl Expr {
                 }
 
                 Ok(left / right)
-            },
+            }
+            Expr::Pow(left, right) => {
+                let left = left.eval()?;
+                let right = right.eval()?;
+
+                if left == T::from(0) && right == T::from(0) {
+                    return Err("0^0 is undefined".to_string());
+                }
+
+                if right.is_negative() {
+                    return Err("Cannot raise to a negative power".to_string());
+                }
+
+                Ok(left.pow(right as u32))
+            }
         }
     }
 
-    fn build_next_expr(operator: &str, expressions_queue: &mut VecDeque<Expr>) -> Result<(), String> {
+    fn build_next_expr(
+        operator: &str,
+        expressions_queue: &mut VecDeque<Expr>,
+    ) -> Result<(), String> {
         // For now we only have operators with two arguments
         if expressions_queue.len() < 2 {
             return Err("Missmatched operator".to_string());
@@ -70,6 +94,7 @@ impl Expr {
             "-" => Expr::Sub(left, right),
             "*" => Expr::Prod(left, right),
             "/" => Expr::Div(left, right),
+            "^" => Expr::Pow(left, right),
             _ => unreachable!(),
         };
 
@@ -86,11 +111,15 @@ impl Expr {
             if let Ok(value) = token.parse::<T>() {
                 expressions_queue.push_back(Expr::Litteral(value));
             } else if OPERATORS_PRECEDENCE.contains_key(&token) {
-                while let Some(op) = operators_queue.pop_back() {
-                    if op != "(" && OPERATORS_PRECEDENCE[&op] >= OPERATORS_PRECEDENCE[&token] {
-                        Expr::build_next_expr(&op, &mut expressions_queue)?;
+                while let Some(op2) = operators_queue.pop_back() {
+                    if op2 != "("
+                        && (OPERATORS_PRECEDENCE[&op2] > OPERATORS_PRECEDENCE[&token]
+                            || (OPERATORS_PRECEDENCE[&op2] == OPERATORS_PRECEDENCE[&token]
+                                && !RIGHT_ASSOCIATIVE_OPERATORS.contains(&token)))
+                    {
+                        Expr::build_next_expr(&op2, &mut expressions_queue)?;
                     } else {
-                        operators_queue.push_back(op);
+                        operators_queue.push_back(op2);
                         break;
                     }
                 }

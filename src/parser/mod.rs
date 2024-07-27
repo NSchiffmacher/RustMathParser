@@ -10,7 +10,7 @@ mod tests {
     #[test]
     fn basic_addition() {
         let input = "3+4";
-        let res: expr::T = 3+4;
+        let res: expr::T = 3 + 4;
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -19,7 +19,7 @@ mod tests {
     #[test]
     fn basic_multiplication() {
         let input = "3*4";
-        let res: expr::T = 3*4;
+        let res: expr::T = 3 * 4;
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -28,7 +28,7 @@ mod tests {
     #[test]
     fn addition_and_left_mult() {
         let input = "3+4*5";
-        let res: expr::T = 3+4*5;
+        let res: expr::T = 3 + 4 * 5;
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -37,7 +37,7 @@ mod tests {
     #[test]
     fn addition_and_right_mult() {
         let input = "3*4+5";
-        let res: expr::T = 3*4+5;
+        let res: expr::T = 3 * 4 + 5;
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -46,7 +46,7 @@ mod tests {
     #[test]
     fn left_parentheses() {
         let input = "(3+4)*5";
-        let res: expr::T = (3+4)*5;
+        let res: expr::T = (3 + 4) * 5;
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -55,7 +55,7 @@ mod tests {
     #[test]
     fn right_parentheses() {
         let input = "3*(4+5)";
-        let res: expr::T = 3*(4+5);
+        let res: expr::T = 3 * (4 + 5);
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -79,7 +79,7 @@ mod tests {
     #[test]
     fn complex2() {
         let input = "2*3*4/8 -   5/2*4 +  6 + 0/3 ";
-        let res: expr::T = 2*3*4/8 -   5/2*4 +  6 + 0/3;
+        let res: expr::T = 2 * 3 * 4 / 8 - 5 / 2 * 4 + 6 + 0 / 3;
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -101,4 +101,21 @@ mod tests {
         assert!(expr.eval().is_err());
     }
 
+    #[test]
+    fn basic_pow() {
+        let input = "2^3";
+        let res: expr::T = 8;
+        let expr = Expr::parse(input).unwrap();
+
+        assert_eq!(expr.eval().unwrap(), res);
+    }
+
+    #[test]
+    fn two_pow() {
+        let input = "2^3^2";
+        let res: expr::T = 512;
+        let expr = Expr::parse(input).unwrap();
+
+        assert_eq!(expr.eval().unwrap(), res);
+    }
 }
