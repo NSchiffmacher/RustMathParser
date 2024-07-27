@@ -2,7 +2,7 @@ use gloo_console::log;
 use yew::prelude::*;
 
 use crate::button::Button;
-use crate::parser::Expr;
+use crate::parser::parse;
 
 #[function_component(App)]
 pub fn app() -> Html {
@@ -27,10 +27,10 @@ pub fn app() -> Html {
         let value_state = value_state.clone();
         Callback::from(move |_| {
             let str_value = (*value_state).clone();
-            let expr = Expr::parse(&str_value);
+            let result = parse(&str_value);
 
-            let str_result = match expr {
-                Ok(expr) => format!("{:?}", expr.eval()),
+            let str_result = match result {
+                Ok(expr) => format!("{:?}", expr),
                 Err(err) => format!("Error: {}", err),
             };
 
