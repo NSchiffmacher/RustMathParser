@@ -9,6 +9,7 @@ pub fn app() -> Html {
     let value_state = use_state(|| "".to_string());
     let allow_input = use_state(|| true);
 
+    // Define callbacks
     let add_to_state = {
         let value_state = value_state.clone();
         let allow_input = allow_input.clone();
@@ -67,7 +68,7 @@ pub fn app() -> Html {
                 Ok(expr) => format!("{:?}", expr),
                 Err(err) => {
                     allow_input.set(false);
-                    format!("Error: {}", err)
+                    err
                 }
             };
 
@@ -103,6 +104,7 @@ pub fn app() -> Html {
         e.prevent_default();
     });
 
+    // Build the calculator grid
     let buttons_grid = vec![
         vec!["(", ")", "%", "CE"], 
         vec!["7", "8", "9", "/"], 
@@ -125,11 +127,12 @@ pub fn app() -> Html {
     })
     .collect::<Vec<_>>();
 
+    // Render HTML
     html! {
     <table id="calculator">
         <tr>
             <td colspan="3">
-                <input type="text" id="result" value={ (*value_state).clone() }/>
+                <input type="text" id="result" value={ (*value_state).clone() } class={ if *allow_input { classes!("") } else { classes!("error")} }/>
             </td>
             <Button value="" text="C" on_click={clear} class={ "reset" } />
         </tr>
