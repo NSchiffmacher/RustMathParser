@@ -1,4 +1,5 @@
 use super::tokenizer::tokenize;
+use super::preprocessor::preprocess_tokens;
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::fmt::Debug;
 use std::sync::LazyLock;
@@ -120,7 +121,8 @@ impl Expr {
         let mut operators_queue: VecDeque<String> = VecDeque::new();
         let mut expressions_queue: VecDeque<Expr> = VecDeque::new();
 
-        let tokens = tokenize(input)?;
+        let raw_tokens = tokenize(input)?;
+        let tokens = preprocess_tokens(raw_tokens)?;
         for token in tokens {
             if let Ok(value) = token.parse::<T>() {
                 expressions_queue.push_back(Expr::Litteral(value));
