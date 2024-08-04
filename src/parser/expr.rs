@@ -1,5 +1,5 @@
-use super::tokenizer::tokenize;
 use super::preprocessor::preprocess_tokens;
+use super::tokenizer::tokenize;
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::fmt::Debug;
 use std::sync::LazyLock;

@@ -1,6 +1,6 @@
 mod expr;
-mod tokenizer;
 mod preprocessor;
+mod tokenizer;
 
 pub use expr::Expr;
 
