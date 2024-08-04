@@ -1,3 +1,6 @@
+[![Deployment](https://github.com/NSchiffmacher/RustMathParser/actions/workflows/cd.yml/badge.svg)](https://github.com/NSchiffmacher/RustMathParser/actions/workflows/cd.yml)
+[![Unit tests](https://github.com/NSchiffmacher/RustMathParser/actions/workflows/ci.yml/badge.svg)](https://github.com/NSchiffmacher/RustMathParser/actions/workflows/ci.yml)
+
 # Yew Calculator & Rust Math Parser
 
 Welcome to my mini project! This initiative allowed me to delve into [Yew], a compelling Rust framework that serves as an alternative to React. I chose [Yew] to further my development skills in Rust and explore its potential in building web applications.
@@ -8,7 +11,7 @@ Along the way, I decided to create my own math parser from scratch. This involve
 
 ### Capabilities
 
-The parser provides the following capabilities:
+This **really** basic parser provides the following capabilities:
 
 - Tokenizing the input code into a stream of tokens.
 - Parsing the token stream to build an AST.
