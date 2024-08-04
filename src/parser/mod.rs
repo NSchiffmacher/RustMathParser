@@ -108,6 +108,20 @@ mod tests {
     }
 
     #[test]
+    fn negative_value() {
+        let input = "-2";
+        let expr = Expr::parse(input).unwrap();
+        assert_eq!(expr.eval().unwrap(), -2);
+    }
+
+    #[test]
+    fn neg_in_parentheses() {
+        let input = "1 + (-2)";
+        let expr = Expr::parse(input).unwrap();
+        assert_eq!(expr.eval().unwrap(), -1);
+    }
+
+    #[test]
     fn basic_pow() {
         let input = "2^3";
         let res: expr::T = 8;
