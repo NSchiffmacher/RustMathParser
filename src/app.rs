@@ -1,8 +1,8 @@
 use yew::prelude::*;
+use yew_hooks::prelude::*;
 
 use crate::button::Button;
-use crate::parser::{parse, T, OPERATORS_PRECEDENCE};
-use gloo_console::log;
+use crate::parser::{parse, OPERATORS_PRECEDENCE, T};
 
 #[function_component(App)]
 pub fn app() -> Html {
@@ -75,14 +75,14 @@ pub fn app() -> Html {
         })
     };
 
-    let keypress = {
+    // Handle keyboard inputs
+    {
         let add_to_state = add_to_state.clone();
         let clear_entry = clear_entry.clone();
         let compute_result = compute_result.clone();
-        Callback::from(move |event: KeyboardEvent| {
+        use_event_with_window("keyup", move |event: KeyboardEvent| {
             event.prevent_default();
             event.stop_immediate_propagation();
-            log!("{:?}", event.clone());
             let key = event.key();
             match key.as_str() {
                 "Enter" => compute_result.emit("".to_string()),
@@ -95,7 +95,13 @@ pub fn app() -> Html {
         })
     };
 
-    let void_callback = Callback::from(|event: KeyboardEvent| event.prevent_default());
+    // Disable other keyboard events
+    use_event_with_window("keydown", move |e: KeyboardEvent| {
+        e.prevent_default();
+    });
+    use_event_with_window("keypress", move |e: KeyboardEvent| {
+        e.prevent_default();
+    });
 
     let buttons_grid = vec![
         vec!["(", ")", "%", "CE"], 
@@ -120,7 +126,7 @@ pub fn app() -> Html {
     .collect::<Vec<_>>();
 
     html! {
-    <table id="calculator" onkeyup={ keypress } onkeypress={ void_callback }>
+    <table id="calculator">
         <tr>
             <td colspan="3">
                 <input type="text" id="result" value={ (*value_state).clone() }/>
