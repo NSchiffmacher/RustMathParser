@@ -13,11 +13,13 @@ pub fn app() -> Html {
         let value_state = value_state.clone();
         let allow_input = allow_input.clone();
         Callback::from(move |value: String| {
-            if !*allow_input {
-                return;
-            }
+            let v = if !*allow_input {
+                allow_input.set(true);
+                "".to_string()
+            } else {
+                (*value_state).clone()
+            };
 
-            let v = (*value_state).clone();
             value_state.set(v + &value);
         })
     };
