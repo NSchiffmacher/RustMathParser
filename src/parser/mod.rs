@@ -3,6 +3,8 @@ mod preprocessor;
 mod tokenizer;
 
 pub use expr::Expr;
+pub use expr::T;
+pub use expr::OPERATORS_PRECEDENCE;
 
 pub fn parse(input: &str) -> Result<expr::T, String> {
     let expr = Expr::parse(input)?;
@@ -67,9 +69,9 @@ mod tests {
 
         assert_eq!(expr.eval().unwrap(), res);
     }
-
+    
     #[test]
-    fn crash_missmatch() {
+    fn crash_missmatch() {  
         let input = "3*(4+(5+)";
         assert!(Expr::parse(input).is_err());
     }
