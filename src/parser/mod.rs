@@ -71,6 +71,33 @@ mod tests {
     }
 
     #[test]
+    fn multiplication_without_parentheses() {
+        let input = "3(4+5)";
+        let res: expr::T = 3 * (4 + 5);
+        let expr = Expr::parse(input).unwrap();
+
+        assert_eq!(expr.eval().unwrap(), res);
+    }
+
+    #[test]
+    fn ommited_multiplication_between_parentheses() {
+        let input = "(3+1)(4+5)";
+        let res: expr::T = (3 + 1) * (4 + 5);
+        let expr = Expr::parse(input).unwrap();
+
+        assert_eq!(expr.eval().unwrap(), res);
+    }
+
+    #[test]
+    fn post_multiplication_without_parentheses() {
+        let input = "(4+5)3";
+        let res: expr::T = 3 * (4 + 5);
+        let expr = Expr::parse(input).unwrap();
+
+        assert_eq!(expr.eval().unwrap(), res);
+    }
+
+    #[test]
     fn crash_missmatch() {
         let input = "3*(4+(5+)";
         assert!(Expr::parse(input).is_err());

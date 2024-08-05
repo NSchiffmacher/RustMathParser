@@ -167,6 +167,12 @@ impl Expr {
             Expr::build_next_expr(&op, &mut expressions_queue)?;
         }
 
+        if expressions_queue.len() > 1 {
+            return Err(format!(
+                "Unable to parse {input}. Too many expressions remaining after parsing."
+            ));
+        }
+
         match expressions_queue.pop_back() {
             Some(expr) => Ok(expr),
             None => Err(format!("Unable to parse {input}")),
