@@ -50,7 +50,7 @@ assert_eq!(result, Some(27));
 
 This website is available as a GitHub page [here](https://nschiffmacher.github.io/RustMathParser/).
 
-### Running it locally
+### Running it locally (Extracted from the [Yew Trunk Minimal Template][yew-trunk])
 
 If you don't already have it installed, it's time to install Rust: <https://www.rust-lang.org/tools/install>.
 The rest of this guide assumes a typical Rust installation which contains both `rustup` and Cargo.
@@ -69,15 +69,14 @@ Simply run the following command to install it:
 cargo install trunk wasm-bindgen-cli
 ```
 
-That's it, we're done!
-
-### Running
+Finally, we can serve the website:
 
 ```bash
 trunk serve
 ```
 
 [trunk]: https://github.com/thedodd/trunk
+[yew-trunk]: https://github.com/yewstack/yew-trunk-minimal-template
 [SY]: https://en.wikipedia.org/wiki/Shunting_yard_algorithm
 [AST]: https://en.wikipedia.org/wiki/Abstract_syntax_tree
 [Yew]: https://yew.rs
