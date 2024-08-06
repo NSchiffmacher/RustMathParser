@@ -5,7 +5,7 @@ mod tokenizer;
 pub use expr::Expr;
 pub use expr::OPERATORS_PRECEDENCE;
 
-pub type T = i32;
+pub type T = i128;
 
 pub fn parse(input: &str) -> Result<T, String> {
     let expr = Expr::parse(input)?;
