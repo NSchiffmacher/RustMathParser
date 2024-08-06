@@ -4,9 +4,10 @@ mod tokenizer;
 
 pub use expr::Expr;
 pub use expr::OPERATORS_PRECEDENCE;
-pub use expr::T;
 
-pub fn parse(input: &str) -> Result<expr::T, String> {
+pub type T = i32;
+
+pub fn parse(input: &str) -> Result<T, String> {
     let expr = Expr::parse(input)?;
     let result = expr.eval()?;
     Ok(result)
@@ -19,7 +20,7 @@ mod tests {
     #[test]
     fn basic_addition() {
         let input = "3+4";
-        let res: expr::T = 3 + 4;
+        let res: T = 3 + 4;
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -28,7 +29,7 @@ mod tests {
     #[test]
     fn basic_multiplication() {
         let input = "3*4";
-        let res: expr::T = 3 * 4;
+        let res: T = 3 * 4;
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -37,7 +38,7 @@ mod tests {
     #[test]
     fn addition_and_left_mult() {
         let input = "3+4*5";
-        let res: expr::T = 3 + 4 * 5;
+        let res: T = 3 + 4 * 5;
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -46,7 +47,7 @@ mod tests {
     #[test]
     fn addition_and_right_mult() {
         let input = "3*4+5";
-        let res: expr::T = 3 * 4 + 5;
+        let res: T = 3 * 4 + 5;
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -55,7 +56,7 @@ mod tests {
     #[test]
     fn left_parentheses() {
         let input = "(3+4)*5";
-        let res: expr::T = (3 + 4) * 5;
+        let res: T = (3 + 4) * 5;
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -64,7 +65,7 @@ mod tests {
     #[test]
     fn right_parentheses() {
         let input = "3*(4+5)";
-        let res: expr::T = 3 * (4 + 5);
+        let res: T = 3 * (4 + 5);
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -73,7 +74,7 @@ mod tests {
     #[test]
     fn multiplication_without_parentheses() {
         let input = "3(4+5)";
-        let res: expr::T = 3 * (4 + 5);
+        let res: T = 3 * (4 + 5);
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -82,7 +83,7 @@ mod tests {
     #[test]
     fn ommited_multiplication_between_parentheses() {
         let input = "(3+1)(4+5)";
-        let res: expr::T = (3 + 1) * (4 + 5);
+        let res: T = (3 + 1) * (4 + 5);
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -91,7 +92,7 @@ mod tests {
     #[test]
     fn post_multiplication_without_parentheses() {
         let input = "(4+5)3";
-        let res: expr::T = 3 * (4 + 5);
+        let res: T = 3 * (4 + 5);
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -106,7 +107,7 @@ mod tests {
     #[test]
     fn complex1() {
         let input = "1 -1   + 2   - 2   +  4 - 4 +    6";
-        let res: expr::T = 6;
+        let res: T = 6;
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -115,7 +116,7 @@ mod tests {
     #[test]
     fn complex2() {
         let input = "2*3*4/8 -   5/2*4 +  6 + 0/3 ";
-        let res: expr::T = 2 * 3 * 4 / 8 - 5 / 2 * 4 + 6 + 0 / 3;
+        let res: T = 2 * 3 * 4 / 8 - 5 / 2 * 4 + 6 + 0 / 3;
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -124,7 +125,7 @@ mod tests {
     #[test]
     fn complex3() {
         let input: &str = "(2) + (17*2-30) * (5)+2 - (8/2)*4";
-        let res: expr::T = 8;
+        let res: T = 8;
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -154,7 +155,7 @@ mod tests {
     #[test]
     fn basic_pow() {
         let input = "2^3";
-        let res: expr::T = 8;
+        let res: T = 8;
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -163,7 +164,7 @@ mod tests {
     #[test]
     fn two_pow() {
         let input = "2^3^2";
-        let res: expr::T = 512;
+        let res: T = 512;
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -172,7 +173,7 @@ mod tests {
     #[test]
     fn pow_parentheses() {
         let input = "2^(3+4)";
-        let res: expr::T = 128;
+        let res: T = 128;
         let expr = Expr::parse(input).unwrap();
 
         assert_eq!(expr.eval().unwrap(), res);
@@ -190,7 +191,7 @@ mod tests {
     #[test]
     fn helper_parse() {
         let input = "(2) + (17*2-30) * (5)+2 - (8/2)*4";
-        let result: expr::T = 8;
+        let result: T = 8;
 
         assert_eq!(parse(input).unwrap(), result);
     }

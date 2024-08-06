@@ -1,10 +1,9 @@
 use super::preprocessor::preprocess_tokens;
 use super::tokenizer::tokenize;
+use super::T;
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::fmt::Debug;
 use std::sync::LazyLock;
-
-pub type T = i32;
 
 pub static OPERATORS_PRECEDENCE: LazyLock<HashMap<String, usize>> = LazyLock::new(|| {
     let mut map = HashMap::new();
